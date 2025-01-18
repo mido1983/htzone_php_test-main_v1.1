@@ -11,8 +11,8 @@ A dynamic product showcase featuring carousels and a filterable product grid.
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd htzone-sales
+git clone <https://github.com/mido1983/htzone_php_test-main_v1.1.git>
+cd htzone_php_test-main_v1.1
 ```
 
 2. Build and start the containers:
