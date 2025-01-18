@@ -21,7 +21,6 @@ MySQL as the database system for both development and production environments.
 3. HTZone API Details
    3.1. Base URL
    arduino
-   Копировать
    https://storeapi.htzone.co.il/ext/O2zfcVu2t8gOB6nzSfFBu4joDYPH7s
    All requests should be made relative to this base address.
 
@@ -104,8 +103,7 @@ Track carousel views, product clicks, add-to-cart actions (if expanded in the fu
    Views (PHP templates, Blade/Twig, etc.) for outputting HTML.
    Example structure:
 
-csharp
-Копировать
+
 project/
 ├── public/
 │   ├── index.php
@@ -240,8 +238,6 @@ Why is this needed? Good UI/UX drives conversion rates, user retention, and over
 
 11. Sample Code Snippets
     11.1. Example of HTZone API Integration (HtzoneApi.php)
-    php
-    Копировать
     class HtzoneApi {
     private $baseUrl = "https://storeapi.htzone.co.il/ext/O2zfcVu2t8gOB6nzSfFBu4joDYPH7s";
 
@@ -275,8 +271,7 @@ Why is this needed? Good UI/UX drives conversion rates, user retention, and over
     This is a basic example using file_get_contents(). A more robust approach would use cURL or Guzzle with response code checks and timeouts.
 
 11.2. Example MySQL Table Structure
-sql
-Копировать
+
 CREATE TABLE IF NOT EXISTS categories (
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(255) NOT NULL,
@@ -295,8 +290,7 @@ stock INT,
 FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 11.3. Example for Loading Items (Item.php)
-php
-Копировать
+
 class Item {
 protected $db; // PDO instance
 
@@ -318,8 +312,7 @@ protected $db; // PDO instance
     }
 }
 11.4. jQuery AJAX for Lazy Load (scripts.js)
-js
-Копировать
+
 $(document).ready(function() {
 let offset = 0;
 const limit = 10;
