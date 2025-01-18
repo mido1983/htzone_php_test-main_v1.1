@@ -144,4 +144,97 @@ class ItemTest extends TestCase
         $result = $this->item->getItems(1, 10, $filters);
         $this->assertEmpty($result['items']);
     }
+
+    public function testGetItemsWithEmptyFilters()
+    {
+        $result = $this->item->getItems(1, 10, []);
+        $this->assertCount(4, $result['items']);
+    }
+
+    public function testGetItemsWithPartialFilters()
+    {
+        $filters = [
+            'price_min' => 500 // Only minimum price
+        ];
+        
+        $result = $this->item->getItems(1, 10, $filters);
+        $this->assertCount(3, $result['items']); // Should return items >= 500
+    }
+
+    public function testGetItemsWithInvalidSortField()
+    {
+        $sort = [
+            'field' => 'invalid_field',
+            'direction' => 'ASC'
+        ];
+        
+        $result = $this->item->getItems(1, 10, [], $sort);
+        // Should default to sorting by name
+        $this->assertEquals('Laptop', $result['items'][0]['name']);
+    }
+
+    public function testGetItemsWithInvalidSortDirection()
+    {
+        $sort = [
+            'field' => 'price',
+            'direction' => 'INVALID'
+        ];
+        
+        $result = $this->item->getItems(1, 10, [], $sort);
+        // Should default to ASC
+        $this->assertEquals('Watch', $result['items'][0]['name']);
+    }
+
+    public function testGetItemsWithNegativePage()
+    {
+        $result = $this->item->getItems(-1, 10);
+        // Should default to page 1
+        $this->assertCount(4, $result['items']);
+    }
+
+    public function testGetItemsWithZeroLimit()
+    {
+        $result = $this->item->getItems(1, 0);
+        $this->assertEmpty($result['items']);
+    }
+
+    public function testGetItemsWithNegativeLimit()
+    {
+        $result = $this->item->getItems(1, -10);
+        $this->assertEmpty($result['items']);
+    }
+
+    public function testGetBrandsWithNoItems()
+    {
+        // Clear all items
+        $this->db->exec('DELETE FROM items');
+        
+        $brands = $this->item->getBrands();
+        $this->assertEmpty($brands);
+    }
+
+    public function testGetPriceRangeWithNoItems()
+    {
+        // Clear all items
+        $this->db->exec('DELETE FROM items');
+        
+        $range = $this->item->getPriceRange();
+        $this->assertNull($range['min_price']);
+        $this->assertNull($range['max_price']);
+    }
+
+    public function testGetItemsWithSpecialCharactersInBrand()
+    {
+        // Insert item with special characters in brand
+        $this->db->exec("
+            INSERT INTO items (id, name, description, price, brand, category_id, stock, last_updated)
+            VALUES (5, 'Special Item', 'Test', 99.99, 'Brand & Co.', 1, 10, " . time() . ")
+        ");
+        
+        $filters = ['brand' => 'Brand & Co.'];
+        $result = $this->item->getItems(1, 10, $filters);
+        
+        $this->assertCount(1, $result['items']);
+        $this->assertEquals('Special Item', $result['items'][0]['name']);
+    }
 } 

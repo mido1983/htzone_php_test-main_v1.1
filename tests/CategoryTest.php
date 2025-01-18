@@ -157,4 +157,59 @@ class CategoryTest extends TestCase
         $results = $this->category->search('nonexistent');
         $this->assertEmpty($results);
     }
+
+    public function testGetItemsWithInvalidCategory()
+    {
+        $items = $this->category->getItems(999, 10, 0);
+        $this->assertEmpty($items);
+    }
+
+    public function testGetTopCategoriesWithZeroLimit()
+    {
+        $categories = $this->category->getTopCategories(0);
+        $this->assertEmpty($categories);
+    }
+
+    public function testGetTopCategoriesWithNegativeLimit()
+    {
+        $categories = $this->category->getTopCategories(-1);
+        $this->assertEmpty($categories);
+    }
+
+    public function testSearchWithSpecialCharacters()
+    {
+        // Insert a category with special characters
+        $this->db->exec("
+            INSERT INTO categories (id, name, description, last_updated)
+            VALUES (4, 'Test & Special', 'Test & Description', " . time() . ")
+        ");
+        
+        $results = $this->category->search('& Special');
+        $this->assertCount(1, $results);
+        $this->assertEquals('Test & Special', $results[0]['name']);
+    }
+
+    public function testGetItemsWithInvalidOffset()
+    {
+        $items = $this->category->getItems(1, 10, -1);
+        $this->assertEmpty($items);
+    }
+
+    public function testGetItemsWithZeroLimit()
+    {
+        $items = $this->category->getItems(1, 0, 0);
+        $this->assertEmpty($items);
+    }
+
+    public function testSearchWithEmptyString()
+    {
+        $results = $this->category->search('');
+        $this->assertEmpty($results);
+    }
+
+    public function testGetItemCountWithInvalidCategory()
+    {
+        $count = $this->category->getItemCount(999);
+        $this->assertEquals(0, $count);
+    }
 } 
