@@ -1,0 +1,63 @@
+HTZone API Documentation
+=======================
+
+Base URL: https://storeapi.htzone.co.il/ext/O2zfcVu2t8gOB6nzSfFBu4joDYPH7s
+
+
+Endpoints
+---------
+
+1. Get Categories
+----------------
+GET /categories
+Returns a list of all product categories.
+
+
+2. Get Items
+-----------
+GET /items/[category_id]
+Returns a list of all items.
+
+Query Parameters:
+- category_id: Filter by category
+
+
+
+Database Schema
+--------------
+For your SQLite implementation, this is the basic Schema, you can expand on the Schema based on the task:
+
+Categories Table:
+```sql
+CREATE TABLE categories (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+);
+```
+
+Items Table:
+
+CREATE TABLE items (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL,
+    brand TEXT,
+    category_id INTEGER,
+    image_url TEXT,
+    stock INTEGER,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+```
+
+Error Handling
+-------------
+The API returns standard HTTP status codes:
+- 200: Success
+- 400: Bad Request
+- 401: Unauthorized (invalid API key)
+- 404: Not Found
+- 429: Too Many Requests
+- 500: Internal Server Error
+
