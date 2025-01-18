@@ -1,10 +1,11 @@
 <?php
 require_once 'class/Logger.php';
 require_once 'class/ErrorHandler.php';
-
+session_start();
 // Initialize error handling
-new ErrorHandler();
 
+new ErrorHandler();
+?>
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
